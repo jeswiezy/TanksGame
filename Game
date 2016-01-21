@@ -10,55 +10,31 @@ class Tank(pygame.sprite.Sprite):
         super(Tank, self).__init__()
         if orientation == 'left':
             self.image = pygame.image.load('tank1.bmp').convert()
+            self.barrelOffset = 64
         if orientation == 'right':
             self.image = pygame.image.load('tank2.bmp').convert()
+            self.barrelOffset = 34
         self.image.set_colorkey((255,255,255), pygame.RLEACCEL)
         self.rect = self.image.get_rect()
 
         self.rect.x = location
         self.rect.y = 370
 
-        #self.barrel = pygame.draw.line(self.screen, (255, 255, 255), 
-
     def moveForward(self):
         self.rect.x += 25      
 
     def moveBackward(self):
         self.rect.x -= 25
+        
+    def update(self):
+        self.updateBarrel()
 
-    def getCurrLoc(self):
-        return (self.rect.x, self.rect.y)
-
-    def angleUp(self):
-        pass
-
-    def angleDown(self):
-        pass
-
-class Barrel():
-
-    def __init__(self, screen, tankLoc, angle = 60):
-        self.screen = screen
-        self.barrelLength = 25
-        self.angle = math.radians(angle)
-        self.tankLoc = tankLoc
-
-        self.startPos = (self.tankLoc[0] + 30, self.tankLoc[1])
+    def updateBarrel(self):
+        self.mousePos = pygame.mouse.get_pos()
+        self.angle = math.atan2(self.rect.y - self.mousePos[1], self.mousePos[0] - (self.rect.x + self.barrelOffset))
+        self.startPos = (self.rect.x + self.barrelOffset, self.rect.y)
         self.endPos = (self.startPos[0] + (self.barrelLength * math.cos(self.angle)), self.startPos[1] - self.barrelLength * math.sin(self.angle))
-        print self.startPos
-        print self.endPos
         pygame.draw.line(self.screen, (0, 0, 0), self.startPos, self.endPos, 3)
-
-    def angleUp(self):
-        pass
-
-    def angleDown(self):
-        pass
-
-    def translate(self):
-        pass
-
-
 
 class Game():
 
